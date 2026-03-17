@@ -1,3 +1,9 @@
 fastapi==0.104.1
 uvicorn[standard]==0.24.0
-pydantic-settings==2.13.1
+pydantic-settings==2.1.0
+email-validator==2.1.0
+passlib[bcrypt]==1.7.4  # для хэширования паролей
+python-jose[cryptography]==3.3.0  # для JWT токенов
+python-multipart==0.0.6  # для обработки форм
+psycopg[binary,pool]==3.2.6
+pydantic==2.11.3

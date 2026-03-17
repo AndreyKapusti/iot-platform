@@ -1,14 +1,10 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, Depends, HTTPException
+from src.core.database import db
+from src.schemas.user import UserResponse
+from src.api.dependencies import get_current_user
 
 router = APIRouter()
 
-@router.get("/users")
-async def get_users():
-    return [
-        {"id": 1, "name": "User 1"},
-        {"id": 2, "name": "User 2"}
-    ]
-
-@router.get("/users/{user_id}")
-async def get_user(user_id: int):
-    return {"id": user_id, "name": f"User {user_id}"}
+@router.get('/me', response_model=UserResponse)
+async def get_current_user_info(current_user = Depends(get_current_user)):
+    return current_user
