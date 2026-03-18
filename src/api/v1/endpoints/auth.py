@@ -1,5 +1,6 @@
 from fastapi import APIRouter, HTTPException, Depends, status
 from fastapi.security import OAuth2PasswordRequestForm
+from src.schemas.login_form import LoginRequest
 from src.schemas.user import UserCreate, UserResponse, Token
 from src.core.database import db
 from src.core.security import get_password_hash, verify_password, create_access_token
@@ -47,6 +48,55 @@ async def register(user_data: UserCreate):
         'is_active': True
     }
 
+@router.post('/login_custom', response_model=Token)
+async def login(form_data: LoginRequest = Depends()):
+    user = await db.fetch_one(
+        """
+        SELECT
+            id,
+            email,
+            username,
+            hashed_password,
+            is_active
+        FROM users
+        WHERE username = %s
+        """,
+        form_data.username
+    )
+
+    if not user:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail='Неверное имя пользователя или пароль',
+            headers={'WWW-Authenticate': 'Bearer'},
+        )
+    
+    if not verify_password(form_data.password, user['hashed_password']):
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail='Неверное имя пользователя или пароль',
+            headers={'WWW-Authenticate': 'Bearer'},
+        )
+    
+    if not user['is_active']:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail='Пользователь заболкирован'
+        )
+    
+    if form_data.remember_me:
+        access_token = create_access_token(
+            data={'sub': user['username']},
+            expires_delta=timedelta(days=7)
+        )
+
+    access_token = create_access_token(
+        data={'sub': user['username']},
+        expires_delta=timedelta(minutes=30)
+    )
+
+    return {'access_token': access_token, 'token_type': 'bearer'}
+
 @router.post('/login', response_model=Token)
 async def login(form_data: OAuth2PasswordRequestForm = Depends()):
     user = await db.fetch_one(
@@ -85,7 +135,6 @@ async def login(form_data: OAuth2PasswordRequestForm = Depends()):
     
     access_token = create_access_token(
         data={'sub': user['username']},
-        expires_delta=timedelta(minutes=300)
     )
 
     return {'access_token': access_token, 'token_type': 'bearer'}
