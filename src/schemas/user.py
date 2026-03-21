@@ -12,7 +12,6 @@ class UserResponse(BaseModel):
     email: EmailStr
     username: str
     is_active: bool
-    exp: datetime
 
     class Config:
         from_attributes = True

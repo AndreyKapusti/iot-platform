@@ -39,3 +39,4 @@ media/
 *.key
 
 future.txt
+iot-platform-test.session.sql
