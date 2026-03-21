@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException
 from src.core.database import db
 from src.schemas.user import UserResponse
-from src.api.dependencies import get_current_user
+from src.api.v1.dependencies.users import get_current_user
 
 router = APIRouter()
 
