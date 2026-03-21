@@ -18,7 +18,7 @@ class ArduinoSimulator:
     def __init__(self, server_url: str, api_key: str):
         self.server_url = server_url.rstrip('/')
         self.api_key = api_key  # ← API-ключ для авторизации
-        self.endpoint = f"{self.server_url}/api/v1/recive_data/"
+        self.endpoint = f"{self.server_url}/api/v1/receive_data/"
     
     def generate_sensor_data(self, use_random: bool = True) -> Dict[str, Any]:
         """Генерирует показания датчиков"""
@@ -44,7 +44,6 @@ class ArduinoSimulator:
     def create_payload(self, sensors: Dict[str, Any]) -> Dict[str, Any]:
         """Создает полный payload для отправки"""
         return {
-            "device_id": "arduino_simulator",  # device_id можно передавать, но сервер берет из api_key
             "temperature": sensors.get("temperature"),
             "humidity": sensors.get("humidity"),
             "light": sensors.get("light"),

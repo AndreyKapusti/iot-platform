@@ -5,7 +5,7 @@ from src.api.v1.dependencies.recieve_data import get_current_device
 router = APIRouter()
 
 @router.post("/", response_model=ArduinoResponse)
-async def receive_arduino_data(
+async def receive_data(
     data: ArduinoData,
     device: dict = Depends(get_current_device)  # ← проверка устройства!
 ):

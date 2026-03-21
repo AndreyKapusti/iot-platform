@@ -3,14 +3,6 @@ from typing import Optional, Dict, Any
 from datetime import datetime
 
 class ArduinoData(BaseModel):
-    device_id: str = Field(
-        ...,
-        description='ID утройства',
-        min_length=3,
-        max_length=50,
-        examples=['arduino_001', 'esp_indor_2345']
-    )
-
     temperature: Optional[float] = Field(
         None,
         description="Температура в градусах Цельсия",
@@ -73,7 +65,6 @@ class ArduinoData(BaseModel):
         """Настройки для документации Swagger"""
         json_schema_extra = {
             "example": {
-                "device_id": "arduino_living_room",
                 "temperature": 23.5,
                 "humidity": 60,
                 "light": 450,

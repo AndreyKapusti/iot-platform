@@ -1,9 +1,9 @@
 from fastapi import APIRouter
-from src.api.v1.endpoints import recive_data, users, auth, devices
+from src.api.v1.endpoints import receive_data, users, auth, devices
 
 api_router = APIRouter()
 
 api_router.include_router(users.router, prefix="/users", tags=["users"])
 api_router.include_router(auth.router, prefix="/auth", tags=["auth"])
-api_router.include_router(recive_data.router, prefix='/recive_data', tags=['recive_data'])
+api_router.include_router(receive_data.router, prefix='/receive_data', tags=['receive_data'])
 api_router.include_router(devices.router, prefix='/devices', tags=['devices'])
