@@ -1,5 +1,5 @@
 from fastapi import APIRouter, Depends
-from src.schemas.arduino import ArduinoData, ArduinoResponse
+from src.schemas.data_inp import ArduinoData, ArduinoResponse
 from src.api.v1.dependencies.recieve_data import get_current_device
 
 router = APIRouter()

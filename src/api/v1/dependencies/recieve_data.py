@@ -1,5 +1,5 @@
 from src.services.device_auth import verify_device
-from fastapi import APIRouter, HTTPException, Header
+from fastapi import HTTPException, Header
 
 async def get_current_device(x_api_key: str = Header(...)):
     """
