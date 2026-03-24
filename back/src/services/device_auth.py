@@ -8,7 +8,7 @@ async def verify_device(api_key: str):
     """
     device = await db.fetch_one(
         """
-        SELECT id, device_id, user_id, name, is_active
+        SELECT id, user_id, name, is_active
         FROM devices
         WHERE api_key = %s AND is_active = true
         """,
@@ -23,7 +23,7 @@ async def verify_device(api_key: str):
 async def generate_api_key() -> str:
     return secrets.token_urlsafe(32)
 
-async def create_device(user_id: int, device_id: str, name: str):
+async def create_device(user_id: int, name: str):
     """
     Создаёт новое устройство с уникальным API ключом,
     добавляет его в таблицу устройств
@@ -33,18 +33,18 @@ async def create_device(user_id: int, device_id: str, name: str):
     try:
         row = await db.fetch_one(
             """
-            INSERT INTO devices (device_id, name, api_key, user_id)
-            VALUES (%s, %s, %s, %s)
-            RETURNING id, device_id, name, api_key, is_active, created_at
+            INSERT INTO devices (name, api_key, user_id)
+            VALUES (%s, %s, %s)
+            RETURNING id, name, api_key, is_active, created_at
             """,
-            device_id, name, api_key, user_id
+            name, api_key, user_id
         )
 
     except Exception as e:
         if 'duplicate key' in str(e).lower():
             raise HTTPException(
                 status_code=400,
-                detail=f"You already have a device with ID '{device_id}'"
+                detail=f"You already have a device with name '{name}'"
             )
         raise
 
