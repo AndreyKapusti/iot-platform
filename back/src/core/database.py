@@ -2,7 +2,7 @@ import psycopg
 from psycopg_pool import AsyncConnectionPool
 from fastapi import HTTPException
 import logging
-from typing import Optional, Any
+from typing import Optional, Any, List, Tuple
 
 logger = logging.getLogger(__name__)
 
@@ -60,6 +60,26 @@ class Database:
             async with conn.cursor() as cur:
                 await cur.execute(query, args)
                 return str(cur.rowcount)
+            
+    async def executemany(self, query: str, params_list: List[Tuple]):
+        """
+        Массовое выполнение запроса (например, для batch insert)
+        
+        Args:
+            query: SQL запрос с плейсхолдерами %s
+            params_list: список кортежей параметров
+                          [(device_id, name, value, time), ...]
+        
+        Returns:
+            количество вставленных строк
+        """
+        if not params_list:
+            return 0
+        
+        async with self.pool.connection() as conn:
+            async with conn.cursor() as cur:
+                await cur.executemany(query, params_list)
+                return cur.rowcount
     
     async def fetch_val(self, query: str, *args):
         """Получить одно значение"""

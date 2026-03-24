@@ -19,17 +19,17 @@ async def add_device(
 
     existing = await db.fetch_one(
         """
-        SELECT device_id FROM devices
-        WHERE device_id = %s AND user_id = %s
+        SELECT name FROM devices
+        WHERE name = %s AND user_id = %s
         """,
-        device_data.device_id, user_id
+        device_data.name, user_id
     )
 
     if existing:
         print('ERR1')
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
-            detail=f"You already have a device with ID '{device_data.device_id}'"
+            detail=f"You already have a device with name '{device_data.name}'"
         )
     
     devices_count = await db.fetch_val(
@@ -47,7 +47,6 @@ async def add_device(
     
     device = await create_device(
         user_id=user_id,
-        device_id=device_data.device_id,
         name=device_data.name
     )
     
@@ -57,7 +56,7 @@ async def add_device(
 async def get_user_devices(current_user: dict = Depends(get_current_user)):
     devices = await db.fetch_all(
         """
-        SELECT device_id, name, api_key, is_active, created_at
+        SELECT id, name, api_key, is_active, created_at
         FROM devices
         WHERE user_id = %s
         ORDER BY created_at DESC
