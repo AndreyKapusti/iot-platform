@@ -12,7 +12,7 @@ CREATE TABLE IF NOT EXISTS users (
 -- Таблица устройств (привязка к пользователю)
 CREATE TABLE IF NOT EXISTS devices (
     id SERIAL PRIMARY KEY,
-    device_id VARCHAR(50) NOT NULL,
+    device_id VARCHAR(50) UNIQUE NOT NULL,
     name VARCHAR(100) NOT NULL,
     api_key VARCHAR(100) UNIQUE NOT NULL,
     user_id INTEGER REFERENCES users(id),
