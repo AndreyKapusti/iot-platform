@@ -1,6 +1,6 @@
 # Geting started
-To start app (windows):
-- cd path\to\repo
+To start fastapi app (windows):
+- cd path\to\repo\back
 - make venv
 - venv\scripts\activate (to activate venv)
 - make install
