@@ -12,3 +12,6 @@ media/
 # Secrets
 *.pem
 *.key
+
+# aduard
+test.sql
